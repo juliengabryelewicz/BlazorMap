@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorMap.Client", "BlazorMap.Client\BlazorMap.Client.csproj", "{7D713530-118B-480B-9C7D-FD0A8166F57C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorMap.Server", "BlazorMap.Server\BlazorMap.Server.csproj", "{256358BF-F851-49E5-8476-88EB60564ADC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorMap.Shared", "BlazorMap.Shared\BlazorMap.Shared.csproj", "{0B3976F4-3467-4C2A-94E4-1F0518B7962F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7D713530-118B-480B-9C7D-FD0A8166F57C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D713530-118B-480B-9C7D-FD0A8166F57C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D713530-118B-480B-9C7D-FD0A8166F57C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D713530-118B-480B-9C7D-FD0A8166F57C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{256358BF-F851-49E5-8476-88EB60564ADC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{256358BF-F851-49E5-8476-88EB60564ADC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{256358BF-F851-49E5-8476-88EB60564ADC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{256358BF-F851-49E5-8476-88EB60564ADC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B3976F4-3467-4C2A-94E4-1F0518B7962F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B3976F4-3467-4C2A-94E4-1F0518B7962F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B3976F4-3467-4C2A-94E4-1F0518B7962F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B3976F4-3467-4C2A-94E4-1F0518B7962F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

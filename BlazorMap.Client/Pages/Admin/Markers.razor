@@ -1,0 +1,56 @@
+﻿@page "/admin/markers"
+@inject IMarkerService MarkerService
+@inject NavigationManager NavigationManager
+@attribute [Authorize(Roles = "Admin")]
+
+<h3>Markers</h3>
+
+@if (MarkerService.AdminMarkers == null)
+{
+    <span>Loading Markers...</span>
+}
+else
+{
+    <button class="btn btn-primary float-end" @onclick="CreateMarker">
+        <i class="oi oi-plus"></i> Add new marker
+    </button>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Visible</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <Virtualize Items="MarkerService.AdminMarkers" Context="marker">
+                <tr>
+                <td>@marker.Title</td>
+                <td>@(marker.IsVisible ? "✔️" : "")</td>
+                <td>
+                    <button class="btn btn-primary" @onclick="(() => EditMarker(marker.Id))">
+                        <i class="oi oi-pencil"></i>
+                    </button>
+                </td>
+            </tr>
+        </Virtualize>
+    </tbody>
+</table>
+}
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await MarkerService.GetAdminMarkers();
+    }
+
+    void EditMarker(int markerId)
+    {
+        NavigationManager.NavigateTo($"admin/marker/{markerId}");
+    }
+
+    void CreateMarker()
+    {
+        NavigationManager.NavigateTo("admin/marker");
+    }
+}

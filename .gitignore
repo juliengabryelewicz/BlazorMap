@@ -1,0 +1,9 @@
+BlazorMap.Client/bin
+BlazorMap.Client/obj
+
+BlazorMap.Server/bin
+BlazorMap.Server/obj
+BlazorMap.Server/BlazorCatalog.db
+
+BlazorMap.Shared/bin
+BlazorMap.Shared/obj

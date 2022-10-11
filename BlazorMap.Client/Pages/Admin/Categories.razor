@@ -1,0 +1,54 @@
+﻿@page "/admin/categories"
+@inject ICategoryService CategoryService
+@inject NavigationManager NavigationManager
+@attribute [Authorize(Roles = "Admin")]
+
+<h3>Categories</h3>
+
+@if (CategoryService.AdminCategories == null)
+{
+    <span>Loading Categories...</span>
+}
+else
+{
+    <button class="btn btn-primary float-end" @onclick="CreateCategory">
+        <i class="oi oi-plus"></i> Add new category
+    </button>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Category</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <Virtualize Items="CategoryService.AdminCategories" Context="category">
+                <tr>
+                <td>@category.Title</td>
+                <td>
+                    <button class="btn btn-primary" @onclick="(() => EditCategory(category.Id))">
+                        <i class="oi oi-pencil"></i>
+                    </button>
+                </td>
+            </tr>
+        </Virtualize>
+    </tbody>
+</table>
+}
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await CategoryService.GetAdminCategories();
+    }
+
+    void EditCategory(int categoryId)
+    {
+        NavigationManager.NavigateTo($"admin/category/{categoryId}");
+    }
+
+    void CreateCategory()
+    {
+        NavigationManager.NavigateTo("admin/category");
+    }
+}

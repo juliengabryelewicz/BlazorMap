@@ -1,0 +1,58 @@
+﻿@page "/"
+@inject IMarkerService MarkerService
+@inject IJSRuntime JSRuntime
+
+<div id="mapContainer">
+    <Map @ref="mapRef" MapOptions="@mapOptions"></Map>
+</div>
+<style>
+
+    #mapContainer {
+        height:85vh;
+    }
+
+    #mapId {
+        height: 100%;
+        width: 100%;
+    }
+</style>
+
+@code {
+    private Map mapRef;
+
+    private List<FisSst.BlazorMaps.Marker> markers = new List<FisSst.BlazorMaps.Marker>();
+
+    private MapOptions mapOptions = new MapOptions()
+    {
+        DivId = "mapId",
+        Center = new LatLng(50.750115, 	2.252208),
+        Zoom = 13,
+        UrlTileLayer = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+	SubOptions = new MapSubOptions()
+        {
+            Attribution = "&copy; <a lhref='http://www.openstreetmap.org/copyright'>OpenStreetMap</a>",
+            TileSize = 512,
+            ZoomOffset = -1,
+            MaxZoom = 19,
+        }
+    };
+
+    [Inject]
+    private IMarkerFactory MarkerFactory { get; init; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await MarkerService.GetMarkers();
+    }
+
+     protected override async Task OnParametersSetAsync()
+    {
+        for (int i = 0; i < MarkerService.Markers.Count; i++)
+        {
+            FisSst.BlazorMaps.Marker marker = await MarkerFactory.CreateAndAddToMap(new LatLng(Decimal.ToDouble(MarkerService.Markers[i].Lat), Decimal.ToDouble(MarkerService.Markers[i].Lon)), this.mapRef);
+            await marker.BindPopup("<h4>"+MarkerService.Markers[i].Title+"</h4><br/>"+MarkerService.Markers[i].Description);
+            this.markers.Add(marker);
+        }
+    }
+
+}

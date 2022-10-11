@@ -1,0 +1,102 @@
+﻿@page "/admin/category"
+@page "/admin/category/{id:int}"
+@inject ICategoryService CategoryService
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
+@attribute [Authorize(Roles = "Admin")]
+
+@if (loading)
+{
+    <span>@msg</span>
+}
+else
+{
+    @if (category.Id != 0)
+    {
+        <h3>Edit "@category.Title"</h3>
+    }
+    else
+    {
+        <h3>Create a new Category</h3>
+    }
+
+    <EditForm Model="category" OnValidSubmit="AddOrUpdateCategory">
+        <DataAnnotationsValidator></DataAnnotationsValidator>
+        <div class="mb-0">
+            <label for="title">Title</label>
+            <InputText id="title" @bind-Value="category.Title" class="form-control"></InputText>
+        </div>
+    <hr />
+    <button type="submit" class="btn btn-primary float-end">@btnText</button>
+    <ValidationSummary></ValidationSummary>
+</EditForm>
+    @if (category.Id != 0)
+    {
+        <button type="button" class="btn btn-danger float-start" @onclick="DeleteCategory">
+            Delete Category
+        </button>
+    }
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    Category category = new Category();
+    bool loading = true;
+    string btnText = "";
+    string msg = "Loading...";
+
+    protected override async Task OnInitializedAsync()
+    {
+
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (Id == 0)
+        {
+            category = new Category();
+            btnText = "Create Category";
+        }
+        else
+        {
+            Category dbCategory = (await CategoryService.GetCategory(Id)).Data;
+            if (dbCategory == null)
+            {
+                msg = $"Category with Id '{Id}' does not exist!";
+                return;
+            }
+            category = dbCategory;
+            btnText = "Update Category";
+        }
+        loading = false;
+    }
+
+
+    async void AddOrUpdateCategory()
+    {
+        if (category.Id == 0)
+        {
+            var result = await CategoryService.CreateCategory(category);
+            NavigationManager.NavigateTo($"admin/category/{result.Id}");
+        }
+        else
+        {
+            category = await CategoryService.UpdateCategory(category);
+            NavigationManager.NavigateTo($"admin/category/{category.Id}", true);
+        }
+    }
+
+    async void DeleteCategory()
+    {
+        bool confirmed = await JSRuntime.InvokeAsync<bool>("confirm",
+            $"Do you really want to delete '{category.Title}'?");
+        if (confirmed)
+        {
+            await CategoryService.DeleteCategory(category);
+            NavigationManager.NavigateTo("admin/categories");
+        }
+    }
+
+}

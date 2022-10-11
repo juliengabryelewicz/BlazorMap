@@ -1,0 +1,129 @@
+﻿@page "/admin/marker"
+@page "/admin/marker/{id:int}"
+@inject IMarkerService MarkerService
+@inject ICategoryService CategoryService
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
+@attribute [Authorize(Roles = "Admin")]
+
+@if (loading)
+{
+    <span>@msg</span>
+}
+else
+{
+    @if (marker.Id != 0)
+    {
+        <h3>Edit "@marker.Title"</h3>
+    }
+    else
+    {
+        <h3>Create a new Marker</h3>
+    }
+
+    <EditForm Model="marker" OnValidSubmit="AddOrUpdateMarker">
+        <DataAnnotationsValidator></DataAnnotationsValidator>
+        <div class="mb-0">
+            <label for="title">Title</label>
+            <InputText id="title" @bind-Value="marker.Title" class="form-control"></InputText>
+        </div>
+        <div class="mb-0">
+                <label for="category">Category</label>
+                <InputSelect id="category" @bind-Value="marker.CategoryId" class="form-control">
+                    @foreach (var category in CategoryService.AdminCategories)
+                    {
+                    <option value="@category.Id">@category.Title</option>
+                    }
+            </InputSelect>
+        </div>
+        <div class="mb-0">
+            <label for="lat">Latitude</label>
+            <InputNumber id="lat" @bind-Value="marker.Lat" class="form-control"></InputNumber>
+        </div>
+        <div class="mb-0">
+            <label for="lon">Longitude</label>
+            <InputNumber id="lon" @bind-Value="marker.Lon" class="form-control"></InputNumber>
+        </div>
+        <div class="mb-0">
+            <label for="description">Description</label>
+            <InputTextArea id="description" @bind-Value="marker.Description" class="form-control"></InputTextArea>
+        </div>
+    <hr />
+        <div class="form-check">
+            <InputCheckbox id="visible" @bind-Value="marker.IsVisible" class="form-check-input"></InputCheckbox>
+            <label for="visible" class="form-check-label">Visible</label>
+        </div>
+    <hr />
+    <button type="submit" class="btn btn-primary float-end">@btnText</button>
+    <ValidationSummary></ValidationSummary>
+</EditForm>
+    @if (marker.Id != 0)
+    {
+        <button type="button" class="btn btn-danger float-start" @onclick="DeleteMarker">
+            Delete Marker
+        </button>
+    }
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    BlazorMap.Shared.Entities.Marker marker = new BlazorMap.Shared.Entities.Marker();
+    bool loading = true;
+    string btnText = "";
+    string msg = "Loading...";
+
+    protected override async Task OnInitializedAsync()
+    {
+		await CategoryService.GetAdminCategories();
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (Id == 0)
+        {
+            marker = new BlazorMap.Shared.Entities.Marker();
+            btnText = "Create Marker";
+        }
+        else
+        {
+            BlazorMap.Shared.Entities.Marker dbMarker = (await MarkerService.GetMarker(Id)).Data;
+            if (dbMarker == null)
+            {
+                msg = $"Marker with Id '{Id}' does not exist!";
+                return;
+            }
+            marker = dbMarker;
+            btnText = "Update Marker";
+        }
+        loading = false;
+    }
+
+
+    async void AddOrUpdateMarker()
+    {
+        if (marker.Id == 0)
+        {
+            var result = await MarkerService.CreateMarker(marker);
+            NavigationManager.NavigateTo($"admin/marker/{result.Id}");
+        }
+        else
+        {
+            marker = await MarkerService.UpdateMarker(marker);
+            NavigationManager.NavigateTo($"admin/marker/{marker.Id}", true);
+        }
+    }
+
+    async void DeleteMarker()
+    {
+        bool confirmed = await JSRuntime.InvokeAsync<bool>("confirm",
+            $"Do you really want to delete '{marker.Title}'?");
+        if (confirmed)
+        {
+            await MarkerService.DeleteMarker(marker);
+            NavigationManager.NavigateTo("admin/markers");
+        }
+    }
+
+}

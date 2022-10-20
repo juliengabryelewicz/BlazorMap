@@ -10,7 +10,7 @@ namespace BlazorMap.Shared.Entities
         [Required]
         [MaxLength(150, ErrorMessage="Title must be 150 characters or less"),MinLength(3)]
         public string Title { get; set; }
-        public string Description { get; set; }
+        public string? Description { get; set; }
         [Required]
         [Column(TypeName = "decimal(18,9)")]
         public decimal Lat { get; set; }
@@ -19,6 +19,6 @@ namespace BlazorMap.Shared.Entities
         public decimal Lon { get; set; }
         public bool IsVisible { get; set; }
         public Category? Category { get; set; }
-        public int CategoryId { get; set; }
+        public int? CategoryId { get; set; }
     }
 }

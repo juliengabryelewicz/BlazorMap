@@ -30,6 +30,7 @@ else
         <div class="mb-0">
                 <label for="category">Category</label>
                 <InputSelect id="category" @bind-Value="marker.CategoryId" class="form-control">
+                    <option value=""></option>
                     @foreach (var category in CategoryService.AdminCategories)
                     {
                     <option value="@category.Id">@category.Title</option>

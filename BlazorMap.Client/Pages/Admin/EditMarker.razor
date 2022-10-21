@@ -4,6 +4,7 @@
 @inject ICategoryService CategoryService
 @inject NavigationManager NavigationManager
 @inject IJSRuntime JSRuntime
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @attribute [Authorize(Roles = "Admin")]
 
 @if (loading)
@@ -77,6 +78,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        await AuthenticationStateProvider.GetAuthenticationStateAsync();
 		await CategoryService.GetAdminCategories();
     }
 

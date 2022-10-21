@@ -1,6 +1,7 @@
 ﻿@page "/admin/markers"
 @inject IMarkerService MarkerService
 @inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @attribute [Authorize(Roles = "Admin")]
 
 <h3>Markers</h3>
@@ -41,6 +42,7 @@ else
 @code {
     protected override async Task OnInitializedAsync()
     {
+        await AuthenticationStateProvider.GetAuthenticationStateAsync();
         await MarkerService.GetAdminMarkers();
     }
 
